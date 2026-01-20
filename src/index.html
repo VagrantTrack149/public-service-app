@@ -4,8 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="./styles/output.css">
 </head>
 <body>
-    <h1>Hola</h1>
+    <div id="controles" class="absolute left-0 top-0"> 
+        <h1>Hola</h1>
+        <form class="absolute top-10 left-10 bg-white p-4 rounded shadow-lg z-50">
+            <div><label for="lat">Latitude</label><input type="text" name="lat" id="lat"></div>
+            <div><label for="lng">Longitude</label><input type="text" name="lng" id="lng"></div>
+        </form>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="./js/map.js"></script>
+    
 </body>
 </html>

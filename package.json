@@ -4,8 +4,8 @@
   "description": "Aplicación web para mapear servicios públicos utilizando Node.js, Express y Tailwind CSS. de libre uso.",
   "main": "index.js",
   "scripts": {
-    "watch-css": "npx tailwindcss -i ./src/css/input.css -o ./public/output.css --watch",
-    "build-css": "npx tailwindcss -i ./src/css/input.css -o ./public/output.css --minify",
+    "watch": "npx tailwindcss -i ./src/css/input.css -o ./public/styles/output.css --watch",
+    "build": "npx tailwindcss -i ./src/css/input.css -o ./public/styles/output.css --minify",
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
