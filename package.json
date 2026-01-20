@@ -1,0 +1,26 @@
+{
+  "name": "public-service-map",
+  "version": "1.0.0",
+  "description": "Aplicación web para mapear servicios públicos utilizando Node.js, Express y Tailwind CSS. de libre uso.",
+  "main": "index.js",
+  "scripts": {
+    "watch-css": "npx tailwindcss -i ./src/css/input.css -o ./public/output.css --watch",
+    "build-css": "npx tailwindcss -i ./src/css/input.css -o ./public/output.css --minify",
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "fs": "^0.0.1-security",
+    "leaflet": "^1.9.4",
+    "leaflet-routing-machine": "^3.2.12",
+    "nodemon": "^3.1.11",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18"
+  }
+}
