@@ -11,20 +11,12 @@
     <div id="controles" class="absolute left-0 top-0"> 
         <h1>Hola</h1>
         <form class="absolute top-10 left-10 bg-white p-4 rounded shadow-lg z-50">
-            <select name="estados" id="estados" class="mb-2">
-                <option value="">Seleccione un estado</option>
-            </select>
-            <select name="municipios" id="municipios" class="mb-2">
-                <option value="">Seleccione un municipio</option>
-            </select>
-
-            <div hidden><label for="lat">Latitude</label><input type="text" name="lat" id="lat"></div>
-            <div hidden><label for="lng">Longitude</label><input type="text" name="lng" id="lng"></div>
+            <div><label for="lat">Latitude</label><input type="text" name="lat" id="lat"></div>
+            <div><label for="lng">Longitude</label><input type="text" name="lng" id="lng"></div>
         </form>
     </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="./js/map.js"></script>
-    <script src="./js/estados.js"></script>
     
 </body>
 </html>
