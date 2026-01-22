@@ -75,27 +75,38 @@ document.getElementById("municipios").addEventListener("change", async function(
         if (window.areaCirculo) {
             // Si ya existe, mover el círculo a las nuevas coordenadas
             window.areaCirculo.setLatLng([resultado.lat, resultado.lng]);
+           
         } else {
             // Crear un círculo azul transparente
             window.areaCirculo = L.circle([resultado.lat, resultado.lng], {
-                color: '#3388ff',     
-                fillColor: '#3388ff',  
+                color: '#4b0082 ',     
+                fillColor: '#e6e6fa',  
                 fillOpacity: 0.2,      
                 radius: 3000,         
                 weight: 2,             
                 draggable: false
             }).addTo(map);
+            //hacer que el circulo desaparezca al segundo
+            setTimeout(() => {
+                map.removeLayer(window.areaCirculo);
+            }, 1000);
+            //hacer que el circulo desaparezca al hacer click
+            window.areaCirculo.on('click', function() {
+            map.removeLayer(window.areaCirculo);
+            });
+        }
             
             // Evento cuando se termina de arrastrar el círculo
-            window.areaCirculo.on('dragend', function(e) {
-                var position = e.target.getLatLng();
-                document.getElementById('lat').value = position.lat;
-                document.getElementById('lng').value = position.lng;
-            });
             
-            // Opcional: mostrar información al hacer clic
-            window.areaCirculo.bindPopup(`<b>${municipioTexto}</b><br>Área seleccionada`);
-        }
+            if (window.areaCirculo.dragging) {
+                window.areaCirculo.on('dragend', function(e) {
+                    var position = e.target.getLatLng();
+                    document.getElementById('lat').value = position.lat;
+                    document.getElementById('lng').value = position.lng;
+                });
+            }
+            
+            
     } else {
         alert("No se pudo encontrar la ubicación exacta. Intenta con una búsqueda más general.");
         // Podrías centrar el mapa en una vista por defecto de México
@@ -107,11 +118,10 @@ document.getElementById("municipios").addEventListener("change", async function(
 async function geocodificarUbicacion(estado, municipio) {
     try {
         // Construir la consulta: municipio, estado, México
-        const query = `${municipio}, ${estado}, México`;
+        const query = `Centro,${municipio}, ${estado}, México`;
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&addressdetails=1`;
-
         const response = await fetch(url);
-
+        console.log(response);
         if (!response.ok) throw new Error('Error en la respuesta de la red');
 
         const data = await response.json();
