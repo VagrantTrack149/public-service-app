@@ -8,14 +8,13 @@
     <link rel="stylesheet" href="./styles/output.css">
 </head>
 <body>
-    <div id="controles" class="absolute left-0 top-0"> 
-        <h1>Hola</h1>
-        <form class="absolute top-10 left-10 bg-white p-4 rounded shadow-lg z-50">
-            <select name="estados" id="estados" class="mb-2">
-                <option value="">Seleccione un estado</option>
+    <div id="controles" class=" left-0 top-0 w-1/4 h-full overflow-y-auto">
+        <form class="absolute top-10 left-0 bg-white p-4 rounded shadow-lg w-1/5">
+            <select name="estados" id="estados" class="mb-2 w-full">
+                <option value="" class="w-full">Seleccione un estado </option>
             </select>
-            <select name="municipios" id="municipios" class="mb-2">
-                <option value="">Seleccione un municipio</option>
+            <select name="municipios" id="municipios" class="mb-2 w-full">
+                <option value="" class="w-full">Seleccione un municipio </option>
             </select>
 
             <div hidden><label for="lat">Latitude</label><input type="text" name="lat" id="lat"></div>

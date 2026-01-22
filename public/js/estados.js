@@ -40,7 +40,7 @@ document.getElementById("estados").addEventListener("change", async function() {
     const Estados_m = await cargarMunicipios(estadoId);
     console.log(await cargarMunicipios(estadoId));
     var municipiosSelect = document.getElementById("municipios");
-    municipiosSelect.innerHTML = "";
+    municipiosSelect.innerHTML = '<option value="" class="w-full">Seleccione un municipio </option>'; // Limpiar opciones anteriores
     Estados_m.Municipios.forEach(municipio => {
         var option = document.createElement("option");
         option.value = municipio;
@@ -49,9 +49,11 @@ document.getElementById("estados").addEventListener("change", async function() {
     });
 });
 
+
 document.getElementById("municipios").addEventListener("change", async function() {
     const estadoSelect = document.getElementById("estados");
     const estadoTexto = estadoSelect.options[estadoSelect.selectedIndex].text;
+    console.log(estadoTexto);
     const municipioTexto = this.value;
     
     if (!municipioTexto) return;
@@ -71,7 +73,7 @@ document.getElementById("municipios").addEventListener("change", async function(
         document.getElementById('lat').value = resultado.lat;
         document.getElementById('lng').value = resultado.lng;
         
-        // 3. Mover o colocar el área circular (en lugar del marcador)
+        /*// 3. Mover o colocar el área circular (en lugar del marcador)
         if (window.areaCirculo) {
             // Si ya existe, mover el círculo a las nuevas coordenadas
             window.areaCirculo.setLatLng([resultado.lat, resultado.lng]);
@@ -104,7 +106,7 @@ document.getElementById("municipios").addEventListener("change", async function(
                     document.getElementById('lat').value = position.lat;
                     document.getElementById('lng').value = position.lng;
                 });
-            }
+            }*/
             
             
     } else {
