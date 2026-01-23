@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!--add_rutas-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
@@ -17,20 +16,15 @@
             <select name="municipios" id="municipios" class="mb-2 w-full">
                 <option value="" class="w-full">Seleccione un municipio </option>
             </select>
-            <ul id="lista_paradas"> Paradas: 
-                <li id="lista_elemento"> </li>
-            </ul>
+
             <div hidden><label for="lat">Latitude</label><input type="text" name="lat" id="lat"></div>
             <div hidden><label for="lng">Longitude</label><input type="text" name="lng" id="lng"></div>
         </form>
-        <div id="nodo_parada">
-            
-        </div>
     </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!--<script src="./js/map.js"></script>-->
-    <script src="./js/lectura_rutas.js"></script>
+    <script src="./js/map.js"></script>
     <script src="./js/estados.js"></script>
+    <script src="./js/lectura_rutas.js"></script>
     
 </body>
 </html>
