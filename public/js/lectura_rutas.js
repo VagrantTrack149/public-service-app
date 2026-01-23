@@ -4,6 +4,7 @@ var diccionario_paradas = {};// Dicionario para almacenar las paradas 1:[lat,lng
 var tilesURL = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
 var mapAttrib = '';
 var ruta_add= true; //temporal
+var controlRutas; // Control de rutas de Leaflet Routing Machine
 // 1. Esperar a que el HTML esté listo
 window.onload = function() {
     MapCreate();
@@ -40,6 +41,16 @@ function MapCreate() {
         attribution: mapAttrib,
         maxZoom: 19
     }).addTo(map);
+
+    // INICIALIZACIÓN DEL PLUGIN DE RUTAS
+    controlRutas = L.Routing.control({
+        waypoints: [],
+        routeWhileDragging: true,
+        createMarker: function() { return null; }, // No crea marcadores extra, ya usas los tuyos
+        addWaypoints: false // Evita que el usuario añada puntos arrastrando la línea directamente
+    }).addTo(map);
+
+
     // 4. Mover el listener de CLICK aquí adentro
     // Esto garantiza que map ya está definido
     if (ruta_add) {   
@@ -47,9 +58,11 @@ function MapCreate() {
         document.getElementById('lat').value = ev.latlng.lat;
         document.getElementById('lng').value = ev.latlng.lng;
         diccionario_paradas[Object.keys(diccionario_paradas).length + 1] = [ev.latlng.lat,ev.latlng.lng];
-        document.getElementById('lista_paradas').innerHTML += '<li id="lista_elemento' + (Object.keys(diccionario_paradas).length) + '"> Parada ' + (Object.keys(diccionario_paradas).length) + ': Latitud ' + ev.latlng.lat + ', Longitud ' + ev.latlng.lng + ' <label style="cursor: pointer;" onclick="eliminarParada(' + (Object.keys(diccionario_paradas).length) + ')">Eliminar</label> </li>';
+        document.getElementById('lista_paradas').innerHTML += '<li id="lista_elemento ' + (Object.keys(diccionario_paradas).length) + '"> Parada ' + (Object.keys(diccionario_paradas).length) + ': Latitud ' + ev.latlng.lat + ', Longitud ' + ev.latlng.lng + ' <label style="cursor: pointer; color: red;" onclick="eliminarParada(' + (Object.keys(diccionario_paradas).length) + ')">Eliminar</label> </li>';
         console.log(diccionario_paradas);
 
+        // ACTUALIZACIÓN: Dibujar la ruta con el nuevo punto
+        actualizarRuta();
         if (pin) {
             pin.setLatLng(ev.latlng);
         } else {
@@ -66,3 +79,18 @@ function MapCreate() {
     }
 };
 
+// FUNCIÓN NUEVA: Convierte el diccionario en waypoints para el mapa
+function actualizarRuta() {
+    var waypoints = [];
+    
+    // Extraemos las coordenadas del diccionario y las convertimos a objetos L.latLng
+    Object.keys(diccionario_paradas).forEach(function(key) {
+        var coords = diccionario_paradas[key];
+        waypoints.push(L.latLng(coords[0], coords[1]));
+    });
+
+    // Pasamos los puntos al control de rutas
+    if (controlRutas) {
+        controlRutas.setWaypoints(waypoints);
+    }
+}

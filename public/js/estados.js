@@ -122,7 +122,12 @@ async function geocodificarUbicacion(estado, municipio) {
         // Construir la consulta: municipio, estado, México
         const query = `Centro,${municipio}, ${estado}, México`;
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&addressdetails=1`;
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: {
+                'Accept': 'application/json',
+                'User-Agent': 'MiAplicacionLogistica/1.0' 
+            }
+        });
         console.log(response);
         if (!response.ok) throw new Error('Error en la respuesta de la red');
 
