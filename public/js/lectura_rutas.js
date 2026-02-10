@@ -15,7 +15,9 @@ window.onload = function() {
 
 function eliminarParada(index) {
     delete diccionario_paradas[index];
-    document.getElementById('lista_elemento' + index).remove();
+    var lista= document.getElementById('lista_paradas');
+    lista.removeChild(document.getElementById('lista_elemento ' + index));
+    actualizarRuta()
     console.log(diccionario_paradas);
 }
 
