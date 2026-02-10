@@ -68,7 +68,12 @@ app.get('/api/estados/:id/municipios', (req, res) => {
         res.status(404).send('Estado no encontrado');
     }
 });
-
+app.get('/Buscar_rutas', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'index_re.html'));
+});
+app.get('/Agregar_rutas', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'agregar_ruta.html'));
+});
 
 module.exports = {
     getEstadoById,
