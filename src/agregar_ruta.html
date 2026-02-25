@@ -17,15 +17,15 @@
             <select name="municipios" id="municipios" class="mb-2 w-full">
                 <option value="" class="w-full">Seleccione un municipio </option>
             </select>
-            <form action="guardar_rutas();" method="post">
                 <label for="nombre_parada">Nombre de la parada</label>
                 <input type="text" hidden id="paradas" name="paradas" placeholder="Paradas" class="mb-2 w-full">
                 <input type="text" id="nombre_parada" name="nombre_parada" placeholder="Ruta X" class="mb-2 w-full">
-                <button type="submit" class="p-2 bg-blue-500">Agregar parada</button>
-        
-            </form>    <ul id="lista_paradas"> Paradas: 
+                <button onclick="guardarRuta()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar Ruta</button>
+            
+            <ul id="lista_paradas"> Paradas: 
                 <li id="lista_elemento"> </li>
             </ul>
+            
             <a href="./index_re.html"></a>
             <div hidden><label for="lat">Latitude</label><input type="text" name="lat" id="lat"></div>
             <div hidden><label for="lng">Longitude</label><input type="text" name="lng" id="lng"></div>

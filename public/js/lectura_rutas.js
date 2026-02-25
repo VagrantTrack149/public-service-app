@@ -5,7 +5,6 @@ var tilesURL = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
 var mapAttrib = '';
 var ruta_add= true; //temporal
 var controlRutas; // Control de rutas de Leaflet Routing Machine
-// 1. Esperar a que el HTML esté listo
 window.onload = function() {
     MapCreate();
     if (this.document.getElementById('map').exists) {       
@@ -23,7 +22,6 @@ function eliminarParada(index) {
 
 
 function MapCreate() {
-    // 2. Crear el contenedor si no existe
     if (!document.getElementById('map')) {
         var div = document.createElement('div');
         div.id = 'map';
@@ -33,7 +31,6 @@ function MapCreate() {
         document.body.prepend(div);
     }
 
-    // 3. Inicializar el objeto map
     map = L.map('map',{
         attributionControl: false,
         compass: true
@@ -44,17 +41,15 @@ function MapCreate() {
         maxZoom: 19
     }).addTo(map);
 
-    // INICIALIZACIÓN DEL PLUGIN DE RUTAS
     controlRutas = L.Routing.control({
         waypoints: [],
         routeWhileDragging: true,
-        createMarker: function() { return null; }, // No crea marcadores extra, ya usas los tuyos
-        addWaypoints: false // Evita que el usuario añada puntos arrastrando la línea directamente
+        createMarker: function() { return null; }, 
+        addWaypoints: false 
     }).addTo(map);
 
 
-    // 4. Mover el listener de CLICK aquí adentro
-    // Esto garantiza que map ya está definido
+    
     if (ruta_add) {   
     map.on('click', function(ev) {
         document.getElementById('lat').value = ev.latlng.lat;
@@ -63,14 +58,12 @@ function MapCreate() {
         document.getElementById('lista_paradas').innerHTML += '<li id="lista_elemento ' + (Object.keys(diccionario_paradas).length) + '"> Parada ' + (Object.keys(diccionario_paradas).length) + ': Latitud ' + ev.latlng.lat + ', Longitud ' + ev.latlng.lng + ' <label style="cursor: pointer; color: red;" onclick="eliminarParada(' + (Object.keys(diccionario_paradas).length) + ')">Eliminar</label> </li>';
         console.log(diccionario_paradas);
 
-        // ACTUALIZACIÓN: Dibujar la ruta con el nuevo punto
         actualizarRuta();
         if (pin) {
             pin.setLatLng(ev.latlng);
         } else {
             pin = L.marker(ev.latlng, { riseOnHover: true, draggable: true }).addTo(map);
             
-            // Evento drag corregido (e.target)
             pin.on('drag', function(e) {
                 var position = e.target.getLatLng();
                 document.getElementById('lat').value = position.lat;
@@ -81,18 +74,44 @@ function MapCreate() {
     }
 };
 
-// FUNCIÓN NUEVA: Convierte el diccionario en waypoints para el mapa
 function actualizarRuta() {
     var waypoints = [];
     
-    // Extraemos las coordenadas del diccionario y las convertimos a objetos L.latLng
     Object.keys(diccionario_paradas).forEach(function(key) {
         var coords = diccionario_paradas[key];
         waypoints.push(L.latLng(coords[0], coords[1]));
     });
 
-    // Pasamos los puntos al control de rutas
     if (controlRutas) {
         controlRutas.setWaypoints(waypoints);
     }
+}
+
+function guardarRuta() {
+    //se crea un objeto con la información de la ruta, incluyendo las paradas y se coloca en un json dentro de Rutas locales/idruta.json
+    //se implementará posteriormente, se guardará en la base de datos, se mostrará un menu con las rutas guardadas y se podrá seleccionar cual eliminar o leer
+    var ruta = {
+        paradas: diccionario_paradas,
+        municipio: document.getElementById('municipios').value,
+        estado: document.getElementById('estados').value,
+        nombre: document.getElementById('nombre_parada').value,
+        estado: document.getElementById('estados').value,
+    };
+    console.log(ruta);
+    var rutaJSON = JSON.stringify(ruta);
+    console.log(rutaJSON);
+    var blob = new Blob([rutaJSON], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'ruta.json';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+function eliminarRuta() {
+    //Eliminar ruta de la base de datos, se implementará posteriormente, mostrará un menu con las rutas guardadas y se podrá seleccionar cual eliminar
+}
+function leerRuta() {
+    //Leer ruta de la base de datos, se implementará posteriormente, mostrará un menu con las rutas guardadas y se podrá seleccionar cual leer
+    //Se mostraran las rutas en el mapa según estaado y municipio o se podrá acceder a una en particular, se implementará posteriormente
 }
