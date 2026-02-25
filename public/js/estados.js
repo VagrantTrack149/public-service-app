@@ -1,4 +1,4 @@
-async function cargarEstados() {
+export async function cargarEstados() {
     try {
         // Llamamos a la ruta que definimos en Express
         const response = await fetch('http://localhost:3000/api/estados');
@@ -22,7 +22,7 @@ async function cargarEstados() {
     });
 })();
 
-async function cargarMunicipios(estadoId) {
+export async function cargarMunicipios(estadoId) {
     try {
         // Llamamos a la ruta que definimos en Express
         const response = await fetch(`http://localhost:3000/api/estados/${estadoId}`);
@@ -58,7 +58,6 @@ document.getElementById("municipios").addEventListener("change", async function(
     
     if (!municipioTexto) return;
     
-    // Opcional: mostrar un indicador de carga
     console.log(`Buscando: ${municipioTexto}, ${estadoTexto}`);
     
     const resultado = await geocodificarUbicacion(estadoTexto, municipioTexto);
@@ -117,7 +116,7 @@ document.getElementById("municipios").addEventListener("change", async function(
 });
 
 
-async function geocodificarUbicacion(estado, municipio) {
+export async function geocodificarUbicacion(estado, municipio) {
     try {
         // Construir la consulta: municipio, estado, México
         const query = `Centro,${municipio}, ${estado}, México`;
@@ -175,4 +174,5 @@ document.getElementById("formulario").addEventListener("submit", function(event)
     console.log("Datos del formulario:", data);
     
 });*/
+
 

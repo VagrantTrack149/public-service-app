@@ -6,24 +6,33 @@
     <title>Buscar rutas de transporte público en tu zona</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="./styles/output.css">
+    
 </head>
 <body>
     <div id="controles" class=" left-0 top-0 w-1/4 h-full overflow-y-auto">
-        <form class="absolute top-10 left-0 bg-white p-4 rounded shadow-lg w-1/5">
+        <div class="absolute top-10 left-0 bg-white p-4 rounded shadow-lg w-1/5">
             <select name="estados" id="estados" class="mb-2 w-full">
                 <option value="" class="w-full">Seleccione un estado </option>
             </select>
             <select name="municipios" id="municipios" class="mb-2 w-full">
                 <option value="" class="w-full">Seleccione un municipio </option>
             </select>
+            <script>
+                estado=document.getElementById('estados');
+                municipio=document.getElementById('municipios');
+            </script>
+            <button onclick="buscarRutas(estado,municipio)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Buscar Rutas en la zona</button>
+            
+            <input type="file" name="ruta" id="ruta" onchange="leerRuta()">
             <div hidden><label for="lat">Latitude</label><input type="text" name="lat" id="lat"></div>
             <div hidden><label for="lng">Longitude</label><input type="text" name="lng" id="lng"></div>
-        </form>
+        </div>
     </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="./js/map.js"></script>
-    <script src="./js/estados.js"></script>
-    <script src="./js/lectura_rutas.js"></script>
+    <script type="module" src="./js/lectura_rutas.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
     
 </body>
 </html>
