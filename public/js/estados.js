@@ -37,6 +37,7 @@ export async function cargarMunicipios(estadoId) {
 
 document.getElementById("estados").addEventListener("change", async function() {
     const estadoId = this.value;
+    //esperar a que Estados_m reciba un valor
     const Estados_m = await cargarMunicipios(estadoId);
     console.log(await cargarMunicipios(estadoId));
     var municipiosSelect = document.getElementById("municipios");
