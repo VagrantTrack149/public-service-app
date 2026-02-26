@@ -155,10 +155,11 @@ function leerRuta() {
         if (muniEl) muniEl.value = ruta.municipio || '';
         if (nombreEl) nombreEl.value = ruta.nombre || '';
         if (lista) lista.innerHTML = '';
+        console.log(ruta.estado, ruta.municipio);
         geocodificarUbicacion(ruta.estado, ruta.municipio).then(resultado => {
             if (resultado) {
                 console.log(`Geocodificado: ${resultado.nombre} en [${resultado.lat}, ${resultado.lng}]`);
-                map.setView([resultado.lat, resultado.lng], 12);
+                //map.setView([resultado.lat, resultado.lng], 12); Problemas, envia de cdmx o estado cuando no responde rapido
                 }
             }
         );
