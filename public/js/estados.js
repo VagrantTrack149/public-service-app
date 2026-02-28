@@ -1,7 +1,7 @@
 export async function cargarEstados() {
     try {
         // Llamamos a la ruta que definimos en Express
-        const response = await fetch('http://localhost:3000/api/estados');
+        const response = await fetch('http://localhost:3306/api/estados');
         const estados = await response.json();
         return estados;
         //console.log(estados);
@@ -25,7 +25,7 @@ export async function cargarEstados() {
 export async function cargarMunicipios(estadoId) {
     try {
         // Llamamos a la ruta que definimos en Express
-        const response = await fetch(`http://localhost:3000/api/estados/${estadoId}`);
+        const response = await fetch(`http://localhost:3306/api/estados/${estadoId}`);
         const municipios = await response.json();
         return municipios;
         // Aquí puedes manipular el DOM para mostrar los municipios
@@ -84,7 +84,7 @@ document.getElementById("municipios").addEventListener("change", async function(
                 color: '#4b0082 ',     
                 fillColor: '#e6e6fa',  
                 fillOpacity: 0.2,      
-                radius: 3000,         
+                radius: 3306,         
                 weight: 2,             
                 draggable: false
             }).addTo(map);
