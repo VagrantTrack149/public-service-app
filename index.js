@@ -1,19 +1,11 @@
 const express = require('express');
 const path = require('path');
-<<<<<<< HEAD
-=======
-const session = require('express-session');
->>>>>>> 14ebbfb6803338e62f592bf1f00101fd6390798e
 const fs = require('fs');
 const cors = require('cors');
 const session = require('express-session');
 require('dotenv').config();
 
-<<<<<<< HEAD
 // auth module
-=======
-// auth
->>>>>>> 14ebbfb6803338e62f592bf1f00101fd6390798e
 const auth = require('./public/components/auth');
 
 const app = express();
@@ -31,7 +23,6 @@ app.use(session({
 
 // init auth
 auth.initialize(app);
-<<<<<<< HEAD
 
 //ruta segura
 app.get('/perfil',auth.ensureLoggedIn,(req, res)=>{
@@ -41,13 +32,6 @@ app.get('/perfil',auth.ensureLoggedIn,(req, res)=>{
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-=======
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-// middleware para proteger rutas 
-const ensureLoggedIn = auth.ensureLoggedIn;
->>>>>>> 14ebbfb6803338e62f592bf1f00101fd6390798e
 app.listen(PORT, () => {
   console.log('Server running in port '+ PORT);
 });
