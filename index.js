@@ -1,11 +1,12 @@
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const fs = require('fs');
 const cors= require('cors');
 require('dotenv').config();
+
+// auth
+const auth = require('./public/components/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3307;
@@ -18,46 +19,14 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
-app.use(passport.initialize());
-app.use(passport.session());
+
+// init auth
+auth.initialize(app);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((obj, done) => done(null, obj));
-
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL || `http://localhost:${PORT}/auth/google/callback`
-  },
-  async (accessToken, refreshToken, profile, cb) => {
-    //insert o update usuario, despues implementar
-    const usuario = {
-      googleId: profile.id,
-      nombre: profile.displayName,
-      email: profile.emails && profile.emails[0].value
-    };
-    return cb(null, usuario);
-  }
-));
-
-// rutas de autenticación
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile','email'] }));
-
-app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login.html' }),
-  (req, res) => {
-    res.redirect('/');
-  });
-
-// middleware para proteger rutas
-function ensureLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) return next();
-  res.redirect('/');
-}
-
+// middleware para proteger rutas 
+const ensureLoggedIn = auth.ensureLoggedIn;
 app.listen(PORT, () => {
   console.log('Server running in port '+ PORT);
 });
