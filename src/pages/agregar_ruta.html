@@ -1,38 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--add_rutas-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar rutas de transporte público en tu zona</title>
+    <title>Main Page</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="./styles/output.css">
-    
 </head>
 <body>
     <div id="controles" class=" left-0 top-0 w-1/4 h-full overflow-y-auto">
-        <div class="absolute top-10 left-0 bg-white p-4 rounded shadow-lg w-1/5">
+        <form class="absolute top-10 left-0 bg-white p-4 rounded shadow-lg w-1/5">
             <select name="estados" id="estados" class="mb-2 w-full">
                 <option value="" class="w-full">Seleccione un estado </option>
             </select>
             <select name="municipios" id="municipios" class="mb-2 w-full">
                 <option value="" class="w-full">Seleccione un municipio </option>
             </select>
-            <script>
-                estado=document.getElementById('estados');
-                municipio=document.getElementById('municipios');
-            </script>
-            <button onclick="buscarRutas(estado,municipio)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Buscar Rutas en la zona</button>
+                <label for="nombre_parada">Nombre de la parada</label>
+                <input type="text" hidden id="paradas" name="paradas" placeholder="Paradas" class="mb-2 w-full">
+                <input type="text" id="nombre_parada" name="nombre_parada" placeholder="Ruta X" class="mb-2 w-full">
+                <button onclick="Guardar_ruta(id_usr,nombre_parada)" class="bg-blue-5 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Buscar Rutas en la zona</button>
+
+                <button onclick="Descargar_Ruta()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Descargar ruta</button>
             
-            <input type="file" name="ruta" id="ruta" onchange="leerRuta()">
+            <ul id="lista_paradas"> Paradas: 
+                <li id="lista_elemento"> </li>
+            </ul>
+            
+            <a href="./index_re.html"></a>
             <div hidden><label for="lat">Latitude</label><input type="text" name="lat" id="lat"></div>
             <div hidden><label for="lng">Longitude</label><input type="text" name="lng" id="lng"></div>
+        </form>
+        <div id="nodo_parada">
+            
         </div>
     </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="./js/map.js"></script>
+    <!--<script src="./js/map.js"></script>-->
+    <!--<script src="estados.js"></script>-->
     <script type="module" src="./js/lectura_rutas.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
     <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
-    
 </body>
 </html>

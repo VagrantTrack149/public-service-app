@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3306;
+const PORT = process.env.PORT || 3307;
 const cors= require('cors');
 const fs = require('fs');
 app.use(cors()); // Enable CORS for all routes
@@ -69,10 +69,10 @@ app.get('/api/estados/:id/municipios', (req, res) => {
     }
 });
 app.get('/Buscar_rutas', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'index_re.html'));
+    res.sendFile(path.join(__dirname, 'src','pages', 'Buscar_rutas.html'));
 });
 app.get('/Agregar_rutas', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'agregar_ruta.html'));
+    res.sendFile(path.join(__dirname, 'src', 'pages','agregar_ruta.html'));
 });
 
 module.exports = {

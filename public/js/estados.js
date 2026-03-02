@@ -1,7 +1,7 @@
 export async function cargarEstados() {
     try {
         // Llamamos a la ruta que definimos en Express
-        const response = await fetch('http://localhost:3306/api/estados');
+        const response = await fetch('http://localhost:3307/api/estados');
         const estados = await response.json();
         return estados;
         //console.log(estados);
@@ -25,7 +25,7 @@ export async function cargarEstados() {
 export async function cargarMunicipios(estadoId) {
     try {
         // Llamamos a la ruta que definimos en Express
-        const response = await fetch(`http://localhost:3306/api/estados/${estadoId}`);
+        const response = await fetch(`http://localhost:3307/api/estados/${estadoId}`);
         const municipios = await response.json();
         return municipios;
         // Aquí puedes manipular el DOM para mostrar los municipios

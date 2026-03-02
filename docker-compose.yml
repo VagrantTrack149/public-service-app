@@ -4,7 +4,7 @@ services:
     container_name: mi-mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: Hola_BD_PRUEBA24
+      MYSQL_ROOT_PASSWORD: Hola_BD_PRUEBA24 #pass and usr
       MYSQL_DATABASE: Mapas
     ports:
       - "3306:3306"
@@ -18,11 +18,14 @@ services:
     ports:
       - "8080:80"
     environment:
-      PMA_HOST: db
+      PMA_HOST: db #server
       PMA_PORT: 3306
       PMA_ARBITRARY: 1
 volumes:
   db_data: 
+
+#docker-compose up -d
+
 #docker run --name mi-mysql -e MYSQL_ROOT_PASSWORD=Hola_BD_PRUEBA24 -p 3306:3306 -d mysql:latest
 #docker run --name mi-pma -e PMA_HOST=db -p 8080:80 -d phpmyadmin:latest
-#docker-compose up -d
+

@@ -1,4 +1,5 @@
 import { cargarEstados, cargarMunicipios,geocodificarUbicacion } from './estados.js';
+import {Obtener_RutabyEstado_Municipio, Insertar_Rutaby_User, Borrar_Rutaby_User, Actualizar_Rutaby_User} from './db/conex_db.js';
 var map;
 var pin;
 var diccionario_paradas = {};// Dicionario para almacenar las paradas 1:[lat,lng],2:[lat,lng]
@@ -106,7 +107,7 @@ function actualizarRuta() {
     }
 }
 
-function guardarRuta() {
+function Descargar_Ruta() {
     //se crea un objeto con la información de la ruta, incluyendo las paradas y se coloca en un json dentro de Rutas locales/idruta.json
     //se implementará posteriormente, se guardará en la base de datos, se mostrará un menu con las rutas guardadas y se podrá seleccionar cual eliminar o leer
     var ruta = {
@@ -183,10 +184,18 @@ function leerRuta() {
 function buscarRutas(estadoEl, municipioEl) {
     //Buscar rutas en la base de datos según estado y municipio, se implementará posteriormente, mostrará las rutas en el mapa según estaado y municipio o se podrá acceder a una en particular, se implementará posteriormente
     console.log('Buscando rutas en el estado: ' + estadoEl.value + ' y municipio: ' + municipioEl.value);
+    Obtener_RutabyEstado_Municipio(estadoEl.value, municipioEl.value).then(rutas => {
+        console.log(rutas);
+        rutas.forEach(ruta => {
+            console.log(ruta);
+            diccionario_paradas = ruta.paradas;
+            console.log(diccionario_paradas);
+        });
+        actualizarRuta();
+    });
 }
 
-// Expose functions used by inline handlers in the HTML (modules are not global)
 window.leerRuta = leerRuta;
 window.buscarRutas = buscarRutas;
 window.eliminarParada = eliminarParada;
-window.guardarRuta = guardarRuta;
+window.Descargar_Ruta = Descargar_Ruta;
