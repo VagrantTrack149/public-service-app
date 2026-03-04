@@ -2845,3 +2845,109 @@ INSERT INTO municipios (estado_id, nombre) VALUES
 (32, 'Zacatecas'),
 (32, 'Trancoso'),
 (32, 'Santa María de la Paz');
+
+-- PROCEDIMIENTOS PARA GESTIÓN DE USUARIOS (AUTH GOOGLE)
+
+-- Crear o actualizar usuario desde datos de Google (UPSERT)
+-- Si el google_id ya existe actualiza nombre, avatar y updated_at
+-- Si el email ya existe actualiza ese registro
+DROP PROCEDURE IF EXISTS sp_guardar_usuario_google;
+DELIMITER $$
+CREATE PROCEDURE sp_guardar_usuario_google(
+    IN p_google_id VARCHAR(255),
+    IN p_nombre VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_avatar_url TEXT
+)
+BEGIN
+    INSERT INTO usuarios (google_id, nombre, email, avatar_url)
+    VALUES (p_google_id, p_nombre, p_email, p_avatar_url)
+    ON DUPLICATE KEY UPDATE
+        nombre = VALUES(nombre),
+        avatar_url = VALUES(avatar_url),
+        updated_at = CURRENT_TIMESTAMP;
+    
+    -- Devolver el usuario recién insertado/actualizado
+    SELECT * FROM usuarios WHERE google_id = p_google_id;
+END$$
+DELIMITER ;
+
+-- Obtener usuario por google_id
+DROP PROCEDURE IF EXISTS sp_obtener_usuario_por_google_id;
+DELIMITER $$
+CREATE PROCEDURE sp_obtener_usuario_por_google_id(
+    IN p_google_id VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM usuarios WHERE google_id = p_google_id;
+END$$
+DELIMITER ;
+
+-- Obtener usuario por email
+DROP PROCEDURE IF EXISTS sp_obtener_usuario_por_email;
+DELIMITER $$
+CREATE PROCEDURE sp_obtener_usuario_por_email(
+    IN p_email VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM usuarios WHERE email = p_email;
+END$$
+DELIMITER ;
+
+-- Actualizar datos de usuario (solo nombre y avatar)
+DROP PROCEDURE IF EXISTS sp_actualizar_usuario;
+DELIMITER $$
+CREATE PROCEDURE sp_actualizar_usuario(
+    IN p_usuario_id INT,
+    IN p_nombre VARCHAR(255),
+    IN p_avatar_url TEXT
+)
+BEGIN
+    UPDATE usuarios
+    SET nombre = COALESCE(p_nombre, nombre),
+        avatar_url = COALESCE(p_avatar_url, avatar_url),
+        updated_at = CURRENT_TIMESTAMP
+    WHERE id = p_usuario_id;
+    
+    SELECT * FROM usuarios WHERE id = p_usuario_id;
+END$$
+DELIMITER ;
+
+-- Eliminar usuario
+DROP PROCEDURE IF EXISTS sp_eliminar_usuario;
+DELIMITER $$
+CREATE PROCEDURE sp_eliminar_usuario(
+    IN p_usuario_id INT
+)
+BEGIN
+    DELETE FROM usuarios WHERE id = p_usuario_id;
+END$$
+DELIMITER ;
+
+--  recibe datos de Google y devuelve el usuario 
+DROP PROCEDURE IF EXISTS sp_login_google;
+DELIMITER $$
+CREATE PROCEDURE sp_login_google(
+    IN p_google_id VARCHAR(255),
+    IN p_nombre VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_avatar_url TEXT
+)
+BEGIN
+    CALL sp_guardar_usuario_google(p_google_id, p_nombre, p_email, p_avatar_url);
+END$$
+DELIMITER ;
+
+-- Listar todos los usuarios
+DROP PROCEDURE IF EXISTS sp_listar_usuarios;
+DELIMITER $$
+CREATE PROCEDURE sp_listar_usuarios()
+BEGIN
+    SELECT id, google_id, nombre, email, avatar_url, created_at, updated_at
+    FROM usuarios
+    ORDER BY created_at DESC;
+END$$
+DELIMITER ;
+
+ALTER TABLE usuarios ADD UNIQUE INDEX (google_id);
+ALTER TABLE usuarios ADD UNIQUE INDEX (email);
