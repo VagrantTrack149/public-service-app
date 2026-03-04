@@ -16,6 +16,7 @@ passport.use(new GoogleStrategy({
   },
   async (accessToken, refreshToken, profile, cb) => {
     // Insert or update usuario db
+    
     const usuario = {
       googleId: profile.id,
       nombre: profile.displayName,
