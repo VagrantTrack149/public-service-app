@@ -1,0 +1,10 @@
+call sp_actualizar_ruta(p_ruta_id,p_usuario_id,p_nombre,p_descripcion,p_municipio_id,p_estado_id,p_paradas_json,p_is_public)
+call sp_actualizar_usuario(p_usurario_id,p_nombre)
+call sp_cambiar_visibilidad_ruta(p_ruta_id,p_usuario_id,p_is_public)
+call sp_compartir_ruta(ruta_id,duenio_id,usario_destino_id,permiso)
+
+call sp_crear_ruta(p_usuario_id,p_nombre,p_descripcion,p_municipio_id,p_estado_id,p_paradas_json,p_is_public)
+call sp_detalles_ruta(p_ruta_id,p_usuario_id)
+call sp_eliminar_ruta(p_ruta_id,p_usuario_id)
+call sp_guardar usuario_google(p_google_id,p_nombre,p_email,p_avatar_url)
+call sp_login_google(p_google_id,p_nombre,p_email,p_avatar_url)

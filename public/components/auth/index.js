@@ -1,8 +1,8 @@
 const express = require('express');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-
 const router = express.Router();
+const db = require('../db/conex_db');
 
 // configurar passport serialization
 passport.serializeUser((user, done) => done(null, user));
@@ -16,12 +16,17 @@ passport.use(new GoogleStrategy({
   },
   async (accessToken, refreshToken, profile, cb) => {
     // Insert or update usuario db
-    
     const usuario = {
       googleId: profile.id,
       nombre: profile.displayName,
-      email: profile.emails && profile.emails[0].value
+      email: profile.emails && profile.emails[0].value,
+      avatar: profile.photos && profile.photos[0].value
     };
+    try {
+      await db.login_google(usuario.googleId, usuario.nombre, usuario.email, usuario.avatar);
+    } catch (err) {
+      console.error('login_google error', err);
+    }
     return cb(null, usuario);
   }
 ));
