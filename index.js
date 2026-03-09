@@ -100,7 +100,9 @@ app.get('/Buscar_rutas', (req, res) => {
 app.get('/Agregar_rutas', (req, res) => {
     res.sendFile(path.join(__dirname, 'src', 'pages','agregar_ruta.html'));
 });
-
+app.get('/header.html',(req,res)=>{
+    res.sendFile(path.join(__dirname,'src','header.html'))
+})
 module.exports = {
     getEstadoById,
     getAllEstados,

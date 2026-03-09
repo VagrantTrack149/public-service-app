@@ -1,5 +1,5 @@
 import { cargarEstados, cargarMunicipios,geocodificarUbicacion } from './estados.js';
-import {Obtener_RutabyEstado_Municipio, Insertar_Rutaby_User, Borrar_Rutaby_User, Actualizar_Rutaby_User} from './db/conex_db.js';
+import {Obtener_RutabyEstado_Municipio, Insertar_Rutaby_User, Borrar_Rutaby_User, Actualizar_Rutaby_User} from '../../public/components/db/conex_db.js';
 var map;
 var pin;
 var diccionario_paradas = {};// Dicionario para almacenar las paradas 1:[lat,lng],2:[lat,lng]
