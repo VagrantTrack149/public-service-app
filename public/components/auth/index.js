@@ -2,36 +2,36 @@ const express = require('express');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const router = express.Router();
-const db = require('../db/conex_db');
+const db = require('../../../db/conex_db');
 
 // configurar passport serialization
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj));
 
-// Google OAuth¿
+// Google OAuth
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.GOOGLE_CALLBACK_URL || `http://localhost:${process.env.PORT || 3307}/auth/google/callback`
   },
   async (accessToken, refreshToken, profile, cb) => {
-    // Insert or update usuario db
-    const usuario = {
-      googleId: profile.id,
-      nombre: profile.displayName,
-      email: profile.emails && profile.emails[0].value,
-      avatar: profile.photos && profile.photos[0].value
-    };
     try {
-      await db.login_google(usuario.googleId, usuario.nombre, usuario.email, usuario.avatar);
+      const usuario = await db.login_google(
+        profile.id,
+        profile.displayName,
+        profile.emails && profile.emails[0].value,
+        profile.photos && profile.photos[0].value
+      );
+      // usuario ya contiene el id de la base de datos
+      return cb(null, usuario);
     } catch (err) {
       console.error('login_google error', err);
+      return cb(err, null);
     }
-    return cb(null, usuario);
   }
 ));
 
-// ruta auth
+// rutas auth
 router.get('/auth/google',
   passport.authenticate('google', { scope: ['profile','email'] }));
 

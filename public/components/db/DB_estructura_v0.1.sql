@@ -19,19 +19,13 @@ CREATE TABLE usuarios (
     avatar_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-)  DEFAULT CHARSET=utf8mb4;
-
-
---  estados (de México)
+) DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE estados (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     codigo VARCHAR(10) NULL
-)  DEFAULT CHARSET=utf8mb4;
-
-
---  municipios
+) DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE municipios (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,10 +33,7 @@ CREATE TABLE municipios (
     nombre VARCHAR(100) NOT NULL,
     FOREIGN KEY (estado_id) REFERENCES estados(id) ON DELETE CASCADE,
     INDEX idx_estado_id (estado_id)
-)  DEFAULT CHARSET=utf8mb4;
-
-
---  rutas
+) DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE rutas (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -55,10 +46,7 @@ CREATE TABLE rutas (
     FOREIGN KEY (creada_por) REFERENCES usuarios(id) ON DELETE CASCADE,
     INDEX idx_creada_por (creada_por),
     INDEX idx_is_public (is_public)
-)  DEFAULT CHARSET=utf8mb4;
-
-
--- Aux rutas_municipios (muchos a muchos)
+) DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE rutas_municipios (
     ruta_id INT NOT NULL,
@@ -67,10 +55,7 @@ CREATE TABLE rutas_municipios (
     FOREIGN KEY (ruta_id) REFERENCES rutas(id) ON DELETE CASCADE,
     FOREIGN KEY (municipio_id) REFERENCES municipios(id) ON DELETE CASCADE,
     INDEX idx_municipio_id (municipio_id)
-) ;
-
-
---  puntos_ruta (coordenadas que conforman la ruta)
+) DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE puntos_ruta (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -82,10 +67,7 @@ CREATE TABLE puntos_ruta (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (ruta_id) REFERENCES rutas(id) ON DELETE CASCADE,
     INDEX idx_ruta_id (ruta_id)
-)  DEFAULT CHARSET=utf8mb4;
-
-
---  rutas_compartidas (compartir con otros usuarios)
+) DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE rutas_compartidas (
     ruta_id INT NOT NULL,
@@ -96,14 +78,13 @@ CREATE TABLE rutas_compartidas (
     FOREIGN KEY (ruta_id) REFERENCES rutas(id) ON DELETE CASCADE,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     INDEX idx_usuario_id (usuario_id)
-)  DEFAULT CHARSET=utf8mb4;
+) DEFAULT CHARSET=utf8mb4;
 
-
+-- 
 -- VISTAS
+-- 
 
-
--- vista v_rutas_con_municipios
-CREATE VIEW v_rutas_con_municipios AS
+CREATE OR REPLACE VIEW v_rutas_con_municipios AS
 SELECT 
     r.id AS ruta_id,
     r.nombre AS nombre_ruta,
@@ -122,12 +103,10 @@ LEFT JOIN municipios m ON rm.municipio_id = m.id
 LEFT JOIN estados e ON m.estado_id = e.id
 GROUP BY r.id;
 
--- vista v_rutas_publicas
-CREATE VIEW v_rutas_publicas AS
+CREATE OR REPLACE VIEW v_rutas_publicas AS
 SELECT * FROM v_rutas_con_municipios WHERE is_public = TRUE;
 
--- vista v_rutas_usuario (información detallada del creador)
-CREATE VIEW v_rutas_usuario AS
+CREATE OR REPLACE VIEW v_rutas_usuario AS
 SELECT 
     r.*,
     u.nombre AS nombre_creador,
@@ -136,9 +115,9 @@ SELECT
 FROM rutas r
 JOIN usuarios u ON r.creada_por = u.id;
 
-
+ 
 -- PROCEDIMIENTOS ALMACENADOS
-
+ 
 
 -- Obtener rutas por estado
 DROP PROCEDURE IF EXISTS sp_obtener_rutas_por_estado;
@@ -471,15 +450,16 @@ BEGIN
 END$$
 DELIMITER ;
 
-
+ 
 -- ÍNDICES ADICIONALES
+ 
 
 CREATE INDEX idx_puntos_ruta_coords ON puntos_ruta(latitud, longitud);
 CREATE INDEX idx_rutas_created_at ON rutas(created_at);
 CREATE INDEX idx_usuarios_email ON usuarios(email);
 CREATE INDEX idx_rutas_compartidas_usuario ON rutas_compartidas(usuario_id);
 
--- entrada estados
+ 
 INSERT INTO estados (nombre, codigo) VALUES
 ('Aguascalientes', 'AGS'),
 ('Baja California', 'BC'),
@@ -514,7 +494,99 @@ INSERT INTO estados (nombre, codigo) VALUES
 ('Yucatán', 'YUC'),
 ('Zacatecas', 'ZAC');
 
---entrada municipios
+-- PROCEDIMIENTOS PARA GESTIÓN DE USUARIOS
+
+DROP PROCEDURE IF EXISTS sp_guardar_usuario_google;
+DELIMITER $$
+CREATE PROCEDURE sp_guardar_usuario_google(
+    IN p_google_id VARCHAR(255),
+    IN p_nombre VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_avatar_url TEXT
+)
+BEGIN
+    INSERT INTO usuarios (google_id, nombre, email, avatar_url)
+    VALUES (p_google_id, p_nombre, p_email, p_avatar_url)
+    ON DUPLICATE KEY UPDATE
+        nombre = VALUES(nombre),
+        avatar_url = VALUES(avatar_url),
+        updated_at = CURRENT_TIMESTAMP;
+    
+    SELECT * FROM usuarios WHERE google_id = p_google_id;
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_obtener_usuario_por_google_id;
+DELIMITER $$
+CREATE PROCEDURE sp_obtener_usuario_por_google_id(
+    IN p_google_id VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM usuarios WHERE google_id = p_google_id;
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_obtener_usuario_por_email;
+DELIMITER $$
+CREATE PROCEDURE sp_obtener_usuario_por_email(
+    IN p_email VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM usuarios WHERE email = p_email;
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_actualizar_usuario;
+DELIMITER $$
+CREATE PROCEDURE sp_actualizar_usuario(
+    IN p_usuario_id INT,
+    IN p_nombre VARCHAR(255),
+    IN p_avatar_url TEXT
+)
+BEGIN
+    UPDATE usuarios
+    SET nombre = COALESCE(p_nombre, nombre),
+        avatar_url = COALESCE(p_avatar_url, avatar_url),
+        updated_at = CURRENT_TIMESTAMP
+    WHERE id = p_usuario_id;
+    
+    SELECT * FROM usuarios WHERE id = p_usuario_id;
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_eliminar_usuario;
+DELIMITER $$
+CREATE PROCEDURE sp_eliminar_usuario(
+    IN p_usuario_id INT
+)
+BEGIN
+    DELETE FROM usuarios WHERE id = p_usuario_id;
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_login_google;
+DELIMITER $$
+CREATE PROCEDURE sp_login_google(
+    IN p_google_id VARCHAR(255),
+    IN p_nombre VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_avatar_url TEXT
+)
+BEGIN
+    CALL sp_guardar_usuario_google(p_google_id, p_nombre, p_email, p_avatar_url);
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_listar_usuarios;
+DELIMITER $$
+CREATE PROCEDURE sp_listar_usuarios()
+BEGIN
+    SELECT id, google_id, nombre, email, avatar_url, created_at, updated_at
+    FROM usuarios
+    ORDER BY created_at DESC;
+END$$
+DELIMITER ;
+
 INSERT INTO municipios (estado_id, nombre) VALUES
 -- Aguascalientes (ID 1)
 (1, 'Aguascalientes'),
@@ -2846,11 +2918,6 @@ INSERT INTO municipios (estado_id, nombre) VALUES
 (32, 'Trancoso'),
 (32, 'Santa María de la Paz');
 
--- PROCEDIMIENTOS PARA GESTIÓN DE USUARIOS (AUTH GOOGLE)
-
--- Crear o actualizar usuario desde datos de Google (UPSERT)
--- Si el google_id ya existe actualiza nombre, avatar y updated_at
--- Si el email ya existe actualiza ese registro
 DROP PROCEDURE IF EXISTS sp_guardar_usuario_google;
 DELIMITER $$
 CREATE PROCEDURE sp_guardar_usuario_google(
@@ -2867,12 +2934,10 @@ BEGIN
         avatar_url = VALUES(avatar_url),
         updated_at = CURRENT_TIMESTAMP;
     
-    -- Devolver el usuario recién insertado/actualizado
     SELECT * FROM usuarios WHERE google_id = p_google_id;
 END$$
 DELIMITER ;
 
--- Obtener usuario por google_id
 DROP PROCEDURE IF EXISTS sp_obtener_usuario_por_google_id;
 DELIMITER $$
 CREATE PROCEDURE sp_obtener_usuario_por_google_id(
@@ -2883,7 +2948,6 @@ BEGIN
 END$$
 DELIMITER ;
 
--- Obtener usuario por email
 DROP PROCEDURE IF EXISTS sp_obtener_usuario_por_email;
 DELIMITER $$
 CREATE PROCEDURE sp_obtener_usuario_por_email(
@@ -2894,7 +2958,6 @@ BEGIN
 END$$
 DELIMITER ;
 
--- Actualizar datos de usuario (solo nombre y avatar)
 DROP PROCEDURE IF EXISTS sp_actualizar_usuario;
 DELIMITER $$
 CREATE PROCEDURE sp_actualizar_usuario(
@@ -2913,7 +2976,6 @@ BEGIN
 END$$
 DELIMITER ;
 
--- Eliminar usuario
 DROP PROCEDURE IF EXISTS sp_eliminar_usuario;
 DELIMITER $$
 CREATE PROCEDURE sp_eliminar_usuario(
@@ -2924,7 +2986,6 @@ BEGIN
 END$$
 DELIMITER ;
 
---  recibe datos de Google y devuelve el usuario 
 DROP PROCEDURE IF EXISTS sp_login_google;
 DELIMITER $$
 CREATE PROCEDURE sp_login_google(
@@ -2938,7 +2999,6 @@ BEGIN
 END$$
 DELIMITER ;
 
--- Listar todos los usuarios
 DROP PROCEDURE IF EXISTS sp_listar_usuarios;
 DELIMITER $$
 CREATE PROCEDURE sp_listar_usuarios()
@@ -2948,6 +3008,3 @@ BEGIN
     ORDER BY created_at DESC;
 END$$
 DELIMITER ;
-
-ALTER TABLE usuarios ADD UNIQUE INDEX (google_id);
-ALTER TABLE usuarios ADD UNIQUE INDEX (email);
