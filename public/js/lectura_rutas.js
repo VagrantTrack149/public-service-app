@@ -145,7 +145,7 @@ function leerRuta() {
             });
         }
         if (ruta.nombre) document.getElementById('nombre_parada').value = ruta.nombre;
- 
+        
         Object.keys(diccionario_paradas).forEach(function(key) {
             var coords = diccionario_paradas[key];
             L.marker(coords).addTo(map).bindPopup('Parada ' + key);
@@ -163,7 +163,10 @@ async function buscarRutas() {
         return;
     }
     try {
-        const response = await fetch(`/api/rutas?municipio_id=${municipioId}`);
+        //const response = await fetch(`/api/rutas?municipio_id=${municipioId}`);
+        const response = await fetch(`/api/rutas?municipio_id=${municipioId}`, {
+            method: 'GET'
+        });
         if (!response.ok) throw new Error('Error en la petición');
         const rutas = await response.json();
         console.log('Rutas encontradas:', rutas);

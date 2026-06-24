@@ -3,7 +3,7 @@ var pin;
 var tilesURL = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
 var mapAttrib = '';
 var ruta_add= false; //temporal
-// 1. Esperar a que el HTML esté listo
+// Esperar a que el HTML esté listo
 window.onload = function() {
     MapCreate();
     if (this.document.getElementById('map').exists) {       
@@ -14,7 +14,7 @@ window.onload = function() {
 
 
 function MapCreate() {
-    // 2. Crear el contenedor si no existe
+    //Crear el contenedor si no existe
     if (!document.getElementById('map')) {
         var div = document.createElement('div');
         div.id = 'map';
@@ -24,7 +24,7 @@ function MapCreate() {
         document.body.prepend(div);
     }
 
-    // 3. Inicializar el objeto map
+    //Inicializar el objeto map
     map = L.map('map',{
         attributionControl: false,
         compass: true
@@ -34,8 +34,7 @@ function MapCreate() {
         attribution: mapAttrib,
         maxZoom: 19
     }).addTo(map);
-    // 4. Mover el listener de CLICK aquí adentro
-    // Esto garantiza que map ya está definido
+    // Mover el listener de CLICK aquí adentro
     if (ruta_add) {   
     map.on('click', function(ev) {
         document.getElementById('lat').value = ev.latlng.lat;

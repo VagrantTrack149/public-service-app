@@ -64,7 +64,7 @@ async function Obtener_RutabyEstado_Municipio(municipio_id, usuario_id = null) {
     try {
         const q = `CALL sp_obtener_rutas_por_municipio(?, ?)`;
         const [rows] = await pool.query(q, [municipio_id, usuario_id]);
-        return rows[0];
+        return rows;
     } catch (error) {
         console.error(error.message);
         throw error;
@@ -109,14 +109,11 @@ async function Borrar_Ruta(ruta_id, usuario_id) {
 
 async function Obtener_Detalles_Ruta(ruta_id, usuario_id) {
     try {
-        const q = `CALL sp_detalles_ruta(?, ?)`;
+        const q = `CALL sp_detalles_ruta_json(?, ?)`;
         const [rows] = await pool.query(q, [ruta_id, usuario_id]);
-        return {
-            ruta: rows[0][0],
-            municipios: rows[1],
-            puntos: rows[2],
-            compartidos: rows[3] || []
-        };
+        const resultado = rows[0][0].resultado;
+
+        return typeof resultado === 'string' ? JSON.parse(resultado) : resultado;
     } catch (error) {
         console.error(error.message);
         throw error;
