@@ -17,7 +17,7 @@
                 <option value="">Seleccione un municipio</option>
             </select>
             <input type="text" id="nombre_parada" name="nombre_parada" placeholder="Ruta X" class="mb-2 w-full" disabled>
-            <input type="text" id="temporal_ruta" name="ruta temporal" placeholder="Ruta temporal" class="mb-2 w-full">
+            <!--<input type="text" id="temporal_ruta" name="ruta temporal" placeholder="Ruta temporal" class="mb-2 w-full">-->
             <button onclick="buscarRutas()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full mb-2">Buscar Rutas en la zona</button>
             <label for="ruta">Cargar una ruta localmente
                 <input type="file" name="ruta" id="ruta" onchange="leerRuta()" class="mt-2">
@@ -27,6 +27,10 @@
                 <label for="lng">Longitud</label><input type="text" name="lng" id="lng">
             </div>
         </div>
+    </div>
+     <div id="in_rutas" class="fixed top-80 bg-white p-4 rounded shadow-lg w-1/5 overflow-y-auto z-50" style="max-height: 80vh;">
+            <h3 class="text-lg font-bold mb-2">Rutas encontradas:</h3>
+            <div id="rutas_encontradas"></div>
     </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="../js/map.js"></script>

@@ -8,9 +8,7 @@
     <title>Inicio </title>
     <div id="header-container"></div>
 </head>
-<body class="top-14 fixed">
-    
-
+<body class="top-14 fixed w-full h-full">
     <script>
     fetch('/header.html')
         .then(response => response.text())
@@ -18,14 +16,16 @@
         document.getElementById('header-container').innerHTML = data;
         });
     </script>
-    <h1>Inicio menu transporte publico temporal xd</h1>
-    <a href="/Buscar_rutas">Buscar ruta</a>
-    <br>
-    <a href="/Agregar_rutas">Agregar ruta</a>
-    <br> <br>
-    <a href="/auth/google">
-        <img src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"
-            alt="Iniciar sesión con Google">
-    </a>
+    <div class="relative top-20 left-0 w-full h-1/2 flex flex-col items-center justify-center">
+        <h1>Inicio menu transporte publico temporal xd</h1>
+        <a href="/Buscar_rutas" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Buscar ruta</a>
+        <br>
+        <a href="/Agregar_rutas" style="background-color: #f89e16; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Agregar ruta</a>
+        <br> <br>
+        <a href="/auth/google">
+            <img src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"
+                alt="Iniciar sesión con Google">
+        </a>
+    </div>
 </body>
 </html>

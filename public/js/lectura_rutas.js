@@ -161,6 +161,7 @@ async function buscarRutas() {
     const municipioId = municipioSelect.value;
     const estadoSelect = document.getElementById('estados');
     const estadoId = estadoSelect.value;
+    const inRutasDiv = document.getElementById('rutas_encontradas');
     if (!municipioId) {
         alert('Selecciona un municipio');
         return;
@@ -180,12 +181,15 @@ async function buscarRutas() {
         const rutas_solo=rutas[0];
         console.log('Rutas encontradas:', rutas);
         //alert(`Se encontraron ${rutas.length} rutas. Revisa la consola.`);
-        const text_rutas=document.getElementById('temporal_ruta');
-        text_rutas.value = JSON.stringify(rutas);
+        //const text_rutas=document.getElementById('temporal_ruta');
+        //text_rutas.value = JSON.stringify(rutas);
         var waypoints = [];
+        inRutasDiv.innerHTML='';
         rutas_solo.forEach((ruta, index) => {
             if (ruta.puntos && Array.isArray(ruta.puntos)) {
                 const colorActual = colores[index % colores.length];
+
+                inRutasDiv.innerHTML += `<div style="background-color: ${colorActual}; padding: 5px; margin-bottom: 5px;">Ruta ${index + 1}: ${ruta.nombre || 'Sin nombre'}</div>`;
                 L.Routing.control({
                     waypoints: waypoints,
                     createMarker: function() { return null; },
