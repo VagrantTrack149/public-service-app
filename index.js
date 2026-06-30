@@ -67,12 +67,12 @@ app.post('/api/login/google', async (req, res) => {
 
 app.get('/api/rutas', async (req, res) => {
     try {
-        const { municipio_id } = req.query;
-        if (!municipio_id) {
-            return res.status(400).json({ error: 'Falta municipio_id' });
+        const { estado_id, municipio_id } = req.query;
+        if (!estado_id || !municipio_id) {
+            return res.status(400).json({ error: 'Faltan estado_id o municipio_id' });
         }
         const usuario_id = req.isAuthenticated() ? req.user.id : null;
-        const rutas = await db.Obtener_RutabyEstado_Municipio(municipio_id, usuario_id);
+        const rutas = await db.sp_obtener_rutas_por_estado_municipio(estado_id,municipio_id, usuario_id);
         res.json(rutas);
     } catch (error) {
         console.error(error);
@@ -85,16 +85,16 @@ app.post('/api/rutas', async (req, res) => {
         if (!req.isAuthenticated()) {
             return res.status(401).json({ error: 'Debes iniciar sesión' });
         }
-        const { nombre, descripcion, municipio_id, estado_id, paradas, is_public } = req.body;
-        const paradas_json = JSON.stringify(paradas);
+        const { nombre, descripcion, municipio_id, estado_id, puntos, is_public } = req.body;
+        const paradas_json = JSON.stringify(puntos);
         const result = await db.Insertar_Ruta(
             req.user.id,
             nombre,
             descripcion || null,
-            municipio_id,
+            is_public !== undefined ? is_public : true,
             estado_id,
-            paradas_json,
-            is_public !== undefined ? is_public : true
+            municipio_id,
+            paradas_json
         );
         res.json({ ruta_id: result[0]?.ruta_id, success: true });
     } catch (error) {
@@ -103,10 +103,11 @@ app.post('/api/rutas', async (req, res) => {
     }
 });
 
-app.get('/api/rutas/:id', async (req, res) => {
+app.get('/api/rutas/:id_estado&:id_municipio', async (req, res) => {
     try {
         const usuario_id = req.isAuthenticated() ? req.user.id : null;
-        const detalles = await db.Obtener_Detalles_Ruta(req.params.id, usuario_id);
+        const detalles = await db.Obtener_Detalles_Ruta(req.params.id_estado, req.params.id_municipio, usuario_id);
+        console.log('Detalles obtenidos:', detalles);
         res.json(detalles);
     } catch (error) {
         console.error(error);

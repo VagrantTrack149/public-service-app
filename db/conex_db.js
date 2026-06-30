@@ -60,10 +60,10 @@ async function obtenerMunicipiosPorEstado(estado_id) {
 }
 
 //  RUTAS 
-async function Obtener_RutabyEstado_Municipio(municipio_id, usuario_id = null) {
+async function sp_obtener_rutas_por_estado_municipio(estado_id, municipio_id, usuario_id = null) {
     try {
-        const q = `CALL sp_obtener_rutas_por_municipio(?, ?)`;
-        const [rows] = await pool.query(q, [municipio_id, usuario_id]);
+        const q = `CALL sp_obtener_rutas_por_estado_municipio(?, ?, ?)`;
+        const [rows] = await pool.query(q, [estado_id, municipio_id, usuario_id]);
         return rows;
     } catch (error) {
         console.error(error.message);
@@ -71,12 +71,12 @@ async function Obtener_RutabyEstado_Municipio(municipio_id, usuario_id = null) {
     }
 }
 
-async function Insertar_Ruta(usuario_id, nombre, descripcion, municipio_id, estado_id, paradas_json, is_public = true) {
+async function Insertar_Ruta(usuario_id, nombre, descripcion, is_public = true,estado_id,municipio_id, paradas_json ) {
     try {
         const q = `CALL sp_crear_ruta(?, ?, ?, ?, ?, ?, ?)`;
 
-        console.log('pruba'+[usuario_id, nombre, descripcion, municipio_id, estado_id, paradas_json, is_public])
-        const [rows] = await pool.query(q, [usuario_id, nombre, descripcion, municipio_id, estado_id, paradas_json, is_public]);
+        console.log('prueba'+[usuario_id, nombre, descripcion, is_public,estado_id,municipio_id, paradas_json ])
+        const [rows] = await pool.query(q, [usuario_id, nombre, descripcion, is_public,estado_id,municipio_id, paradas_json, ]);
         
         return rows[0];
     } catch (error) {
@@ -107,12 +107,12 @@ async function Borrar_Ruta(ruta_id, usuario_id) {
     }
 }
 
-async function Obtener_Detalles_Ruta(ruta_id, usuario_id) {
+async function Obtener_Detalles_Ruta(estado_id, municipio_id, usuario_id) {
     try {
-        const q = `CALL sp_detalles_ruta_json(?, ?)`;
-        const [rows] = await pool.query(q, [ruta_id, usuario_id]);
+        const q = `CALL sp_obtener_rutas_por_estado_municipio(?, ?, ?)`;
+        const [rows] = await pool.query(q, [estado_id, municipio_id, usuario_id]);
         const resultado = rows[0][0].resultado;
-
+        console.log('Detalles obtenidos:', resultado);
         return typeof resultado === 'string' ? JSON.parse(resultado) : resultado;
     } catch (error) {
         console.error(error.message);
@@ -125,7 +125,7 @@ module.exports = {
     login_google,
     obtenerEstados,
     obtenerMunicipiosPorEstado,
-    Obtener_RutabyEstado_Municipio,
+    sp_obtener_rutas_por_estado_municipio,
     Insertar_Ruta,
     Actualizar_Ruta,
     Borrar_Ruta,
