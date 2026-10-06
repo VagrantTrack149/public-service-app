@@ -31,22 +31,33 @@ export async function cargarMunicipios(estadoId) {
     }
 }
 
-// Evento change del select de estados
-document.getElementById("estados")?.addEventListener("change", async function() {
-    const estadoId = this.value;
-    if (!estadoId) return;
-    const municipios = await cargarMunicipios(estadoId);
-    const municipiosSelect = document.getElementById("municipios");
+
+export async function cargarMunicipiosEnSelect(estadoId, municipioId = '') {
+    const municipiosSelect = document.getElementById('municipios');
+    if (!municipiosSelect) return;
+
     municipiosSelect.innerHTML = '<option value="">Seleccione un municipio</option>';
-    municipios.forEach(m => {
-        const option = document.createElement("option");
-        option.value = m.id;
-        option.text = m.nombre;
+    if (!estadoId) return;
+
+    const municipios = await cargarMunicipios(estadoId);
+    (municipios || []).forEach(municipio => {
+        const option = document.createElement('option');
+        option.value = municipio.id;
+        option.text = municipio.nombre;
         municipiosSelect.add(option);
     });
+
+    municipiosSelect.value = municipioId;
+    await geocodificarUbicacion(document.getElementById("estados").selectedOptions[0].text, 
+        municipiosSelect.selectedOptions[0]?.text || '');
+}
+
+// Evento change del select de estados
+document.getElementById("estados")?.addEventListener("change", async function() {
+    await cargarMunicipiosEnSelect(this.value);
 });
 
-// Evento change del select de municipios (geocodificar)
+// Evento change del select de municipios
 document.getElementById("municipios")?.addEventListener("change", async function() {
     const municipioId = this.value;
     if (!municipioId) return;

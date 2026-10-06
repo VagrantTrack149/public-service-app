@@ -1,32 +1,35 @@
 {
   "name": "public-service-map",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Aplicación web para mapear servicios públicos utilizando Node.js, Express y Tailwind CSS. de libre uso.",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "watch": "npx tailwindcss -i ./src/css/input.css -o ./public/styles/output.css --watch",
     "build": "npx tailwindcss -i ./src/css/input.css -o ./public/styles/output.css --minify",
-    "dev": "nodemon index.js",
-    "start": "node index.js"
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "all": "concurrently \"npm run watch\" \"npm run dev\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "express-session": "^1.17.3",
-    "fs": "^0.0.1-security",
+    "express-session": "^1.19.0",
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
-    "mssql": "^12.2.0",
     "mysql2": "^3.19.0",
-    "nodemon": "^3.1.11",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
-    "postcss": "^8.5.6",
+    "postcss": "^8.5.6"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "nodemon": "^3.1.11",
     "tailwindcss": "^3.4.18"
   }
 }

@@ -111,13 +111,27 @@ async function Obtener_Detalles_Ruta(estado_id, municipio_id, usuario_id) {
     try {
         const q = `CALL sp_obtener_rutas_por_estado_municipio(?, ?, ?)`;
         const [rows] = await pool.query(q, [estado_id, municipio_id, usuario_id]);
-        const resultado = rows[0][0].resultado;
-        console.log('Detalles obtenidos:', resultado);
-        return typeof resultado === 'string' ? JSON.parse(resultado) : resultado;
+        const rutas = rows[0] || [];
+
+        return rutas.map(r => ({
+            ...r,
+            puntos: typeof r.puntos === 'string' ? JSON.parse(r.puntos) : r.puntos
+        }));
     } catch (error) {
-        console.error(error.message);
+        console.error('Error en Obtener_Detalles_Ruta:', error.message);
         throw error;
     }
+}
+async function registrarUsuarioLocal(nombre, email, password_hash) {
+  const q = `CALL sp_registrar_usuario_local(?, ?, ?)`;
+  const [rows] = await pool.query(q, [nombre, email, password_hash]);
+  return rows[0][0];
+}
+
+async function obtenerUsuarioPorEmail(email) {
+  const q = `CALL sp_obtener_usuario_por_email_con_hash(?)`;
+  const [rows] = await pool.query(q, [email]);
+  return rows[0][0];
 }
 
 module.exports = {
@@ -129,5 +143,7 @@ module.exports = {
     Insertar_Ruta,
     Actualizar_Ruta,
     Borrar_Ruta,
-    Obtener_Detalles_Ruta
+    Obtener_Detalles_Ruta,
+    registrarUsuarioLocal,
+    obtenerUsuarioPorEmail
 };

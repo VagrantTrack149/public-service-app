@@ -1,22 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="./styles/output.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seleccionar coordenadas — RutaMX</title>
+  <script>
+    (function () {
+      const t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="../styles/output.css">
 </head>
-<body>
-    <div id="controles" class="absolute left-0 top-0"> 
-        <h1>Hola</h1>
-        <form class="absolute top-10 left-10 bg-white p-4 rounded shadow-lg z-50">
-            <div><label for="lat">Latitude</label><input type="text" name="lat" id="lat"></div>
-            <div><label for="lng">Longitude</label><input type="text" name="lng" id="lng"></div>
-        </form>
+<body class="min-h-screen overflow-hidden">
+
+  <div id="header-container"></div>
+  <script>
+    fetch('/header.html').then(r => r.text()).then(d => {
+      document.getElementById('header-container').innerHTML = d;
+      window.dispatchEvent(new Event('header:loaded'));
+    });
+  </script>
+  <script src="/js/header.js" defer></script>
+
+  <div id="map" class="fixed inset-0 z-0 pt-16"></div>
+
+  <div class="fixed top-20 left-4 z-[500] w-80 max-w-[calc(100vw-2rem)]">
+    <div class="surface p-4">
+      <h2 class="font-bold text-lg mb-3">Seleccionar coordenadas</h2>
+      <label class="label" for="lat">Latitud</label>
+      <input type="text" id="lat" class="input mb-3">
+      <label class="label" for="lng">Longitud</label>
+      <input type="text" id="lng" class="input">
+      <p class="text-xs text-muted mt-3">Haz clic en el mapa para fijar el punto.</p>
     </div>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="./js/map.js"></script>
-    
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../js/map.js"></script>
 </body>
 </html>
